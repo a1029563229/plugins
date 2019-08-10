@@ -2,19 +2,26 @@ const fs = require("fs");
 const path = require("path");
 const OSS = require("ali-oss");
 
-const config = require("@/config");
-const staticDirPath = path.join(__dirname, "../../images");
-const images = readDir(staticDirPath);
 const IGNORE = [".git"];
+const DEFAULT_ALLOW_FILE = ["png", "jpg"];
 
 class OSSUploader {
   constructor(config) {
     this.config = config;
+    this.staticDirPath = path.join(
+      __dirname,
+      "../../",
+      config.localResourceDir || "images"
+    );
+    this.allowFile = config.allowFile
+      ? config.allowFile.split(",")
+      : DEFAULT_ALLOW_FILE;
     this._init();
   }
 
   _init() {
-    this.client = new OSS(config);
+    this.client = new OSS(this.config);
+    this.images = this.readDir(this.staticDirPath);
   }
 
   readDir(entry, images = []) {
@@ -25,8 +32,8 @@ class OSSUploader {
       const location = path.join(entry, item);
       const info = fs.statSync(location);
       if (info.isDirectory()) {
-        readDir(location, images);
-      } else if (location.endsWith(".png") || location.endsWith(".jpg")) {
+        this.readDir(location, images);
+      } else if (this.allowFile.some(scheme => location.endsWith(`.${scheme}`))) {
         images.push(location);
       }
     }
@@ -34,9 +41,11 @@ class OSSUploader {
   }
 
   async put() {
+    const images = this.images;
+    console.log({ images });
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
-      const objectName = `images${image.split(staticDirPath)[1]}`;
+      const objectName = `images${image.split(this.staticDirPath)[1]}`;
       const localFile = image;
       if (objectName.indexOf("\\") > -1) {
         objectName = objectName.replace(/\\/g, "/");
