@@ -8,9 +8,6 @@ const images = readDir(staticDirPath);
 const IGNORE = [".git"];
 
 class OSSUploader {
-  config = null;
-  client = null;
-
   constructor(config) {
     this.config = config;
     this._init();
