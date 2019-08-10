@@ -33,7 +33,9 @@ class OSSUploader {
       const info = fs.statSync(location);
       if (info.isDirectory()) {
         this.readDir(location, images);
-      } else if (this.allowFile.some(scheme => location.endsWith(`.${scheme}`))) {
+      } else if (
+        this.allowFile.some(scheme => location.endsWith(`.${scheme}`))
+      ) {
         images.push(location);
       }
     }
@@ -42,18 +44,17 @@ class OSSUploader {
 
   async put() {
     const images = this.images;
-    console.log({ images });
+    const staticDirPath = this.staticDirPath;
+    const client = this.client;
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
-      const objectName = `images${image.split(this.staticDirPath)[1]}`;
+      const objectName = `images${image.split(staticDirPath)[1]}`;
       const localFile = image;
       if (objectName.indexOf("\\") > -1) {
         objectName = objectName.replace(/\\/g, "/");
       }
-      // await client.put(objectName, localFile);
-      console.log(
-        `http://xuedaowang.oss-cn-shenzhen.aliyuncs.com/${objectName} 上传成功`
-      );
+      const result = await client.put(objectName, localFile);
+      console.log(`${result.url} 上传成功`);
     }
     console.log("所有文件上传成功");
   }
