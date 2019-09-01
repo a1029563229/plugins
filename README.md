@@ -10,7 +10,7 @@
 
 ```es6
     {
-      oss: {
+      "oss": {
         "region": "", // bucket 所在的 region，例如深圳的节点为 oss-cn-shenzhen，可在阿里云查询 oss 对应的 region
         "accessKeyId": "", // 阿里云 oss 提供的 accessKeyId
         "accessKeySecret": "", // 阿里云 oss 提供的 accessKeyId
