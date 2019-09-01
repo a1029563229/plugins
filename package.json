@@ -11,6 +11,7 @@
   "dependencies": {
     "ali-oss": "^6.1.1",
     "commander": "^3.0.0",
+    "graphql-params": "^1.0.2",
     "module-alias": "^2.2.1",
     "slash": "^3.0.0"
   },
