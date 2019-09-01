@@ -1,6 +1,6 @@
 {
-  "name": "@shadows/graphql-query",
-  "version": "1.0.0",
+  "name": "shadows-graphql-query",
+  "version": "1.0.1",
   "description": "A formatter-utils for graphql-query",
   "main": "index.js",
   "scripts": {
