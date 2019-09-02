@@ -1,0 +1,12 @@
+{
+  "name": "shadows-preload-image",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "demo": "cd ./demo && npm start"
+  },
+  "author": "",
+  "license": "ISC"
+}
