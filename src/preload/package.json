@@ -1,7 +1,7 @@
 {
   "name": "shadows-preload-image",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "preload image resources in your h5 App",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

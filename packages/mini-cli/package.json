@@ -1,0 +1,20 @@
+{
+  "name": "shadows-mini-cli",
+  "version": "1.1.1",
+  "description": "Build mini-project for support ES6 Syntax",
+  "main": "index.js",
+  "bin": {
+    "mini": "bin/mini"
+  },
+  "scripts": {
+    "start": "node lib/mini.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^3.0.0",
+    "inquirer": "^7.0.0",
+    "shelljs": "^0.8.3",
+    "slash": "^3.0.0"
+  }
+}
