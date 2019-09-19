@@ -1,6 +1,6 @@
 const gql_query = require('../index');
 
-test('default query', () => {
+test('simple query', () => {
   expect(gql_query({
     categoryList: ['title', 'description']
   })).toBe('{ categoryList { title description } }');
