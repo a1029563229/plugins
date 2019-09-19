@@ -9,6 +9,8 @@ const create = async app => {
   const cwd = process.cwd();
   const dirPath = slash(path.resolve(cwd, app));
   shell.exec(`git clone git@github.com:a1029563229/es6-template.git ${dirPath}`);
+  const gitPath = slash(path.join(dirPath, './.git'));
+  shell.rm('-rf', gitPath);
   console.log(`Create ${app} successfully!`);
 }
 
