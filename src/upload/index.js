@@ -1,9 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const OSS = require("ali-oss");
+const cache = require('./.cache/record.json');
 
 const IGNORE = [".git"];
 const DEFAULT_ALLOW_FILE = ["png", "jpg"];
+const record = {};
 
 class OSSUploader {
   constructor(config) {
@@ -53,9 +55,15 @@ class OSSUploader {
       if (objectName.indexOf("\\") > -1) {
         objectName = objectName.replace(/\\/g, "/");
       }
+      // 通过 mtimeMs 对比文件是否改动
+      record[localFile] = fs.statSync(localFile).mtimeMs;
+      if (cache[localFile] && cache[localFile] === record[localFile]) continue;
       const result = await client.put(objectName, localFile);
       console.log(`${result.url} 上传成功`);
     }
+    
+    // 记录文件变更时间
+    fs.writeFileSync(path.join(__dirname, './.cache/record.json'), JSON.stringify(record, null, 2), 'utf-8');
     console.log("所有文件上传成功");
   }
 }
