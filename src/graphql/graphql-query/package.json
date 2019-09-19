@@ -1,6 +1,6 @@
 {
   "name": "shadows-graphql-query",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A formatter-utils for graphql-query",
   "main": "index.js",
   "scripts": {
@@ -11,5 +11,12 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^24.9.0"
+  },
+  "keywords": [
+    "graphql"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/a1029563229/plugins/tree/master/src/graphql/graphql-query"
   }
 }
