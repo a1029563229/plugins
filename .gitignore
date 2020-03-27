@@ -1,3 +1,4 @@
 node_modules
 config/config.json
 images/*
+./packages/api-dynamic-form/output
