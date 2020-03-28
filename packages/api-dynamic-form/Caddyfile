@@ -1,0 +1,35 @@
+http://www.dynamic-form.com {
+   proxy / localhost:5555 {
+        transparent
+   }
+}
+
+http://node.dynamic-form.com {
+   proxy / localhost:4400 {
+        transparent
+   }
+  cors / {
+     origin http://localhost:5555
+     origin http://www.dynamic-form.com
+     methods *
+     allow_credentials false
+     allowed_headers   X-Custom-Header,X-Foobar,content-type,Access-Control-Allow-Headers,x-requested-with,Access-Control-Request-Headers,Content-type,X-Auth-Token,antikey,authorization,xd-request-id
+     exposed_headers   X-Something-Special,SomethingElse
+     max_age 36000
+  }
+}
+
+http://go.dynamic-form.com {
+   proxy / localhost:4500 {
+        transparent
+   }
+  cors / {
+     origin http://localhost:5555
+     origin http://www.dynamic-form.com
+     methods *
+     allow_credentials false
+     allowed_headers   X-Custom-Header,X-Foobar,content-type,Access-Control-Allow-Headers,x-requested-with,Access-Control-Request-Headers,Content-type,X-Auth-Token,antikey,authorization,xd-request-id
+     exposed_headers   X-Something-Special,SomethingElse
+     max_age 36000
+  }
+}

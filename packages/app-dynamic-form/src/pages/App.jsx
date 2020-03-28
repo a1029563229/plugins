@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { Menu } from "antd";
 import Home from './home';
 import Add from './add';
+import DynamicTable from './dynamicTable';
+import DynamicForm from './dynamicForm';
 
 const menus = [
   {
@@ -45,6 +47,8 @@ const App = () => {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/add' component={Add} />
+          <Route exact path='/dynamicTable' component={DynamicTable} />
+          <Route exact path='/dynamicForm' component={DynamicForm} />
         </Switch>
       </section>
     </Router>
