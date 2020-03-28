@@ -3,6 +3,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import { Card, Row, Col, Button } from "antd";
 
 import axios from "@/axios";
+import store from "@/store";
 import { fetchList } from "@/utils/fetch";
 import DyTable from "./DyTable";
 
@@ -19,7 +20,7 @@ const DynamicTable = () => {
       const { data } = result;
       setTableInfo(data);
     })();
-  }, []);
+  }, [table_id]);
 
   // 设置数据表格信息 (column)
   const [tableColumns, setTableColumns] = useState([]);
@@ -50,7 +51,23 @@ const DynamicTable = () => {
         total: listData.total
       });
     })();
-  }, [page]);
+  }, [page, tableInfo]);
+
+  const onCopyHandler = data => {
+    store.dispatch({
+      type: "SET_COPY_CONTENT",
+      payload: data
+    });
+    history.push(`/dynamicForm?id=${table_id}&type=copy`);
+  };
+
+  const onUpdateHandler = data => {
+    store.dispatch({
+      type: "SET_COPY_CONTENT",
+      payload: data
+    });
+    history.push(`/dynamicForm?id=${table_id}&type=update`);
+  };
 
   if (!tableInfo) return null;
 
@@ -58,17 +75,34 @@ const DynamicTable = () => {
     <Card title={`${tableInfo.name}（${tableInfo.cn_name}）`}>
       <section>
         <Row style={{ marginBottom: 20 }}>
-          <Col span="6">
-            <Button type="primary" onClick={() => history.push(`/dynamicForm?id=${table_id}`)}>插入数据</Button>
+          <Col>
+            <Button
+              type="primary"
+              onClick={() => history.push(`/dynamicForm?id=${table_id}`)}
+            >
+              插入数据
+            </Button>
           </Col>
         </Row>
         <DyTable
           dataSource={list}
-          onChange={setPage}
           pageInfo={pageInfo}
           tableColumns={tableColumns}
+          onChange={setPage}
+          onCopy={onCopyHandler}
+          onUpdate={onUpdateHandler}
         />
       </section>
+      <Row style={{ marginTop: 20 }}>
+        <Col span={12}>
+          <Card title="go 语句">
+            <div dangerouslySetInnerHTML={{ __html: tableInfo.go_doc }}></div>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card title="json 语句">{tableInfo.json_doc}</Card>
+        </Col>
+      </Row>
     </Card>
   );
 };
