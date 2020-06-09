@@ -1,20 +1,19 @@
 const fs = require("fs");
 const path = require("path");
 const OSS = require("ali-oss");
-const cache = require('./.cache/record.json');
+const slash = require("slash");
+const chalk = require("chalk");
+const clip = require("@ayykamp/napi-clip");
+
+const Watcher = require("./Watcher");
 
 const IGNORE = [".git"];
-const DEFAULT_ALLOW_FILE = ["png", "jpg"];
-const record = {};
+const DEFAULT_ALLOW_FILE = ["png", "jpg", "jpeg", "gif"];
 
 class OSSUploader {
   constructor(config) {
     this.config = config;
-    this.staticDirPath = path.join(
-      __dirname,
-      "../../",
-      config.localResourceDir || "images"
-    );
+    this.staticDirPath = path.join(__dirname, "../../images");
     this.allowFile = config.allowFile
       ? config.allowFile.split(",")
       : DEFAULT_ALLOW_FILE;
@@ -36,7 +35,7 @@ class OSSUploader {
       if (info.isDirectory()) {
         this.readDir(location, images);
       } else if (
-        this.allowFile.some(scheme => location.endsWith(`.${scheme}`))
+        this.allowFile.some((scheme) => location.endsWith(`.${scheme}`))
       ) {
         images.push(location);
       }
@@ -44,27 +43,24 @@ class OSSUploader {
     return images;
   }
 
-  async put() {
-    const images = this.images;
-    const staticDirPath = this.staticDirPath;
-    const client = this.client;
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const objectName = `images${image.split(staticDirPath)[1]}`;
-      const localFile = image;
-      if (objectName.indexOf("\\") > -1) {
-        objectName = objectName.replace(/\\/g, "/");
-      }
-      // 通过 mtimeMs 对比文件是否改动
-      record[localFile] = fs.statSync(localFile).mtimeMs;
-      if (cache[localFile] && cache[localFile] === record[localFile]) continue;
-      const result = await client.put(objectName, localFile);
-      console.log(`${result.url} 上传成功`);
+  async putItem(image) {
+    if (!fs.existsSync(image)) {
+      return;
+      // return console.log(chalk.red(`file ${image} not exists`));
     }
-    
-    // 记录文件变更时间
-    fs.writeFileSync(path.join(__dirname, './.cache/record.json'), JSON.stringify(record, null, 2), 'utf-8');
-    console.log("所有文件上传成功");
+
+    const objectName = slash(`images${image.split(this.staticDirPath)[1]}`);
+    const result = await this.client.put(objectName, image);
+    clip.setText(result.url);
+    console.log(`${result.url} 上传成功`);
+  }
+
+  watch() {
+    console.log(chalk.blue("watch imageDir..."));
+    const watcher = new Watcher();
+    watcher.process(async (file) => {
+      await this.putItem(file);
+    });
   }
 }
 
